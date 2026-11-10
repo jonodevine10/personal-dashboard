@@ -31,10 +31,17 @@ class Commitment extends DashboardModel
     {
         parent::validateForSave();
 
-        Validator::make(['days_of_week' => $this->days_of_week], [
+        $daysOfWeek = array_map(
+            fn (mixed $day): mixed => is_numeric($day) ? (int) $day : $day,
+            $this->days_of_week ?? [],
+        );
+
+        Validator::make(['days_of_week' => $daysOfWeek], [
             'days_of_week' => [$this->is_enabled ? 'required' : 'present', 'array', 'list', 'max:7'],
             'days_of_week.*' => ['required', 'integer', 'between:1,7', 'distinct'],
         ])->validate();
+
+        $this->days_of_week = $daysOfWeek;
     }
 
     /** @return BelongsTo<Area, $this> */

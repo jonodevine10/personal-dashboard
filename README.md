@@ -4,10 +4,11 @@ A single-user productivity dashboard built with Laravel 13, Filament 5 and SQLit
 
 ## Current stage
 
-Stage 1 is implemented: schema, validated models, editable seed placeholders,
-transactional project/task actions and single-user authentication. `/admin`
-currently shows Filament's default dashboard. Today, quick capture and the
-remaining screens will arrive in subsequent stages.
+Stages 1 and 2 are implemented: schema, validated models, editable seed
+placeholders, single-user authentication, the Today page, focus capacity,
+recurring commitments, persistent quick capture and transactional Inbox triage.
+Areas/Projects, Week, Waiting On, Fixed Dates and Evening Shutdown remain future
+stages.
 
 ## Requirements
 
@@ -58,8 +59,25 @@ when working on Vite-managed frontend assets.
 - Singleton focus budget: 240 minutes/day; dated overrides accept zero.
 - No sample tasks, projects or account credentials.
 
-Management screens are not part of stage 1; records can currently be inspected
-and edited through `php artisan tinker`.
+Commitments are managed under **Commitments** in the panel. Edit the disabled
+early-shift and work-day templates, select the weekdays they start on, and enable
+them when their actual schedule is configured. A commitment can cross midnight;
+Today displays its overlap with the current local date.
+
+Tasks and projects do not yet have general management screens. Inbox triage can
+create a task (unscheduled unless you pick a date), append a timestamped note to
+an existing project, or create a paused Parking Lot project. Today’s **Add task**
+action schedules directly created tasks for today by default. Inbox capture stays
+in the panel header on desktop and mobile.
+
+Today groups pending scheduled tasks by Must, Should and Could. Completing an
+active project's linked next action requires entering a replacement action or
+choosing to pause/finish that project. Rescheduling later increments the task's
+visible carry counter. Focus capacity totals known estimates for pending scheduled
+tasks only. Tasks without estimates are flagged as unknown rather than counted as
+zero, and scheduled fixed commitments display separately from focus capacity.
+Edit the dashboard-wide default or today’s override directly on the Today page;
+**Reset** removes the daily override and returns to the current default.
 
 ## Domain rules
 
@@ -93,14 +111,16 @@ npm run build
 ```
 
 Tests use an isolated in-memory SQLite database, never your local data. They
-cover seed preservation, record casts, capacity constraints, linked next-action
-rules and atomic transitions, carry counts, migration rollback with populated
-relationships, provisioning, login and panel access.
+cover seed preservation, record casts, capacity calculations and overrides,
+linked next-action rules and atomic transitions, carry counts, commitment
+occurrences including overnight shifts, Inbox capture and triage transactions,
+migration rollback with populated relationships, provisioning, login and panel
+access.
 
 ## Build stages
 
 1. Foundation (complete).
-2. Today, quick capture and Inbox triage.
+2. Today, quick capture and Inbox triage (complete).
 3. Areas/Projects and next-action interactions.
 4. Week view.
 5. Waiting On and Fixed Dates widgets.

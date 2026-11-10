@@ -15,7 +15,7 @@ class InboxItem extends DashboardModel
     protected function rules(): array
     {
         return [
-            'text' => ['required', 'string'],
+            'text' => ['required', 'string', 'max:5000'],
             'triaged_at' => ['nullable', 'date'],
         ];
     }

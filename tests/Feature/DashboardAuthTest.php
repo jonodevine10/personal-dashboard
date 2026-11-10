@@ -24,6 +24,7 @@ class DashboardAuthTest extends TestCase
 
     public function test_the_single_owner_can_access_the_dashboard(): void
     {
+        $this->seed();
         $user = User::factory()->create();
         $this->actingAs($user)->get('/admin')->assertOk();
         $this->assertTrue($user->canAccessPanel(Filament::getPanel('admin')));
